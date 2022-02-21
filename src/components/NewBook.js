@@ -1,32 +1,66 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { GET_BOOKS } from "./Books";
+
+const CREATE_BOOK = gql`
+  mutation Mutation(
+    $title: String!
+    $author: String!
+    $published: Int!
+    $genres: [String]!
+  ) {
+    addBook(
+      title: $title
+      author: $author
+      published: $published
+      genres: $genres
+    ) {
+      id
+      title
+      published
+      author
+      genres
+    }
+  }
+`;
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState('')
-  const [genre, setGenre] = useState('')
-  const [genres, setGenres] = useState([])
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [published, setPublished] = useState("");
+  const [genre, setGenre] = useState("");
+  const [genres, setGenres] = useState([]);
+
+  const [addBook] = useMutation(CREATE_BOOK, {
+    refetchQueries: [{ query: GET_BOOKS }],
+  });
 
   if (!props.show) {
-    return null
+    return null;
   }
+
+  const newBook = {
+    title,
+    author,
+    published: Number(published),
+    genres,
+  };
 
   const submit = async (event) => {
-    event.preventDefault()
-
-    console.log('add book...')
-
-    setTitle('')
-    setPublished('')
-    setAuthor('')
-    setGenres([])
-    setGenre('')
-  }
+    event.preventDefault();
+    addBook({ variables: { ...newBook } });
+    console.log("add book...");
+    setTitle("");
+    setPublished("");
+    setAuthor("");
+    setGenres([]);
+    setGenre("");
+  };
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
-  }
+    setGenres(genres.concat(genre));
+    setGenre("");
+  };
 
   return (
     <div>
@@ -62,11 +96,11 @@ const NewBook = (props) => {
             add genre
           </button>
         </div>
-        <div>genres: {genres.join(' ')}</div>
+        <div>genres: {genres.join(" ")}</div>
         <button type="submit">create book</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewBook
+export default NewBook;
