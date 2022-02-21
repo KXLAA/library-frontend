@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
+import SetBirthYear from "./SetBirthYear";
 
-const GET_AUTHORS = gql`
+export const GET_AUTHORS = gql`
   query AllAuthors {
     allAuthors {
       name
@@ -40,6 +41,8 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <h2>Set Birth Year</h2>
+      <SetBirthYear />
     </div>
   );
 };
