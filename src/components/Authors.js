@@ -11,15 +11,14 @@ const GET_AUTHORS = gql`
 `;
 
 const Authors = (props) => {
-  const {
-    loading,
-    error,
-    data: { allAuthors },
-  } = useQuery(GET_AUTHORS);
+  const { loading, _, data } = useQuery(GET_AUTHORS);
 
-  console.log(allAuthors);
   if (!props.show) {
     return null;
+  }
+
+  if (loading) {
+    return <div>loading...</div>;
   }
 
   return (
@@ -32,7 +31,7 @@ const Authors = (props) => {
             <th>born</th>
             <th>books</th>
           </tr>
-          {allAuthors.map((a) => (
+          {data?.allAuthors?.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
