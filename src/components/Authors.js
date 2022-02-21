@@ -42,7 +42,7 @@ const Authors = (props) => {
         </tbody>
       </table>
       <h2>Set Birth Year</h2>
-      <SetBirthYear />
+      <SetBirthYear authors={data?.allAuthors} />
     </div>
   );
 };

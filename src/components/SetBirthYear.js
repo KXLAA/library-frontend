@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { GET_AUTHORS } from "./Authors";
+import Select from "react-select";
 
 const EDIT_AUTHOR = gql`
   mutation Mutation($name: String!, $setBornTo: Int) {
@@ -12,16 +13,18 @@ const EDIT_AUTHOR = gql`
   }
 `;
 
-const SetBirthYear = () => {
-  const [name, setName] = useState("");
+const SetBirthYear = ({ authors }) => {
   const [born, setBorn] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const options = authors.map((a) => ({ value: a.name, label: a.name }));
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: GET_AUTHORS }],
   });
 
   const updatedAuthor = {
-    name,
+    name: selectedOption.value,
     setBornTo: Number(born),
   };
 
@@ -29,7 +32,6 @@ const SetBirthYear = () => {
     event.preventDefault();
     editAuthor({ variables: { ...updatedAuthor } });
     console.log("add book...");
-    setName("");
     setBorn("");
   };
 
@@ -37,10 +39,10 @@ const SetBirthYear = () => {
     <div>
       <form onSubmit={submit}>
         <div>
-          name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
+          <Select
+            defaultValue={selectedOption}
+            onChange={setSelectedOption}
+            options={options}
           />
         </div>
         <div>
