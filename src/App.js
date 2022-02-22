@@ -7,7 +7,10 @@ import { useApolloClient } from "@apollo/client";
 
 const App = () => {
   const [page, setPage] = useState("authors");
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(
+    localStorage.getItem("phonenumbers-user-token")
+  );
+
   const [error, setError] = useState(null);
   const client = useApolloClient();
 
@@ -24,7 +27,7 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         {token && <button onClick={() => setPage("add")}>add book</button>}
         {token && <button onClick={logout}>logout</button>}
-        <button onClick={() => setPage("login")}>login</button>
+        {!token && <button onClick={() => setPage("login")}>login</button>}
       </div>
 
       <Authors show={page === "authors"} />

@@ -1,7 +1,15 @@
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useEffect } from "react";
-import { useFilter } from "../hooks";
 
+const GET_USER = gql`
+  query Query {
+    me {
+      id
+      username
+      favoriteGenre
+    }
+  }
+`;
 export const GET_BOOKS = gql`
   query AllBooks($genre: String) {
     allBooks(genre: $genre) {
@@ -21,13 +29,16 @@ export const GET_BOOKS = gql`
 const Books = (props) => {
   // const { loading, error, data } = useQuery(GET_BOOKS);
   const [getBooks, { loading, error, data }] = useLazyQuery(GET_BOOKS);
+  const user = useQuery(GET_USER);
 
   const filter = (genre) => {
     getBooks({ variables: { genre: genre } });
   };
 
   useEffect(() => {
-    getBooks();
+    if (!user) {
+      getBooks();
+    } else getBooks({ variables: { genre: user?.data?.me.favoriteGenre } });
   }, []);
 
   if (loading) {
