@@ -1,8 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import { useEffect } from "react";
+import { useFilter } from "../hooks";
 
 export const GET_BOOKS = gql`
-  query AllBooks {
-    allBooks {
+  query AllBooks($genre: String) {
+    allBooks(genre: $genre) {
       genres
       author {
         name
@@ -17,9 +19,16 @@ export const GET_BOOKS = gql`
   }
 `;
 const Books = (props) => {
-  const { loading, error, data } = useQuery(GET_BOOKS);
+  // const { loading, error, data } = useQuery(GET_BOOKS);
+  const [getBooks, { loading, error, data }] = useLazyQuery(GET_BOOKS);
 
-  console.log(data);
+  const filter = (genre) => {
+    getBooks({ variables: { genre: genre } });
+  };
+
+  useEffect(() => {
+    getBooks();
+  }, []);
 
   if (loading) {
     return <div>loading...</div>;
@@ -48,6 +57,13 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+      <button onClick={() => filter("refactoring")}>refactoring</button>
+      <button onClick={() => filter("agile")}>agile</button>
+      <button onClick={() => filter("patterns")}>patterns</button>
+      <button onClick={() => filter("design")}>design</button>
+      <button onClick={() => filter("crime")}>crime</button>
+      <button onClick={() => filter("classic")}>classic</button>
+      <button onClick={getBooks}>all genres</button>
     </div>
   );
 };
