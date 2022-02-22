@@ -4,6 +4,7 @@ import SetBirthYear from "./SetBirthYear";
 export const GET_AUTHORS = gql`
   query AllAuthors {
     allAuthors {
+      id
       name
       bookCount
       born

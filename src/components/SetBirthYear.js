@@ -24,7 +24,7 @@ const SetBirthYear = ({ authors }) => {
   });
 
   const updatedAuthor = {
-    name: selectedOption.value,
+    name: selectedOption?.value,
     setBornTo: Number(born),
   };
 

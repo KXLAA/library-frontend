@@ -4,7 +4,12 @@ export const GET_BOOKS = gql`
   query AllBooks {
     allBooks {
       genres
-      author
+      author {
+        name
+        bookCount
+        born
+        id
+      }
       published
       title
       id
@@ -13,6 +18,8 @@ export const GET_BOOKS = gql`
 `;
 const Books = (props) => {
   const { loading, error, data } = useQuery(GET_BOOKS);
+
+  console.log(data);
 
   if (loading) {
     return <div>loading...</div>;
@@ -35,7 +42,7 @@ const Books = (props) => {
           {data?.allBooks?.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author?.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}
