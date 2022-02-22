@@ -14,6 +14,8 @@ const App = () => {
   const [error, setError] = useState(null);
   const client = useApolloClient();
 
+  console.log(error);
+
   const logout = () => {
     setToken(null);
     localStorage.clear();
